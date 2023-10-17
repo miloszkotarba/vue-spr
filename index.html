@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        text-decoration: none;
+        font-family: "Poppins", sans-serif;
+      }
+
+      nav {
+        background: #0278d3;
+        min-height: 65px;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      nav .container,
+      .container {
+        max-width: 1200px;
+        width: 100%;
+        margin-inline: auto;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      ul {
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+
+      li a {
+        color: #eee;
+        font-size: 1.1rem;
+        font-weight: 300;
+      }
+
+      nav .logo {
+        font-weight: 500;
+        font-size: 1.6rem;
+        color: #fff;
+      }
+
+      .active {
+        color: #fff;
+        font-weight: 400;
+        background: #27a1ff;
+        padding: 7px 12px;
+        border-radius: 2px;
+        transition: all ease 0.3s;
+      }
+
+      p.page {
+        margin-top: 2rem;
+        font-size: 1.2rem;
+      }
+
+      footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #23262f;
+        color: #f1f1f1;
+        display: flex;
+        justify-content: space-between;
+        padding: 16px 20px;
+        font-size: 0.95rem;
+      }
+
+      footer a {
+        color: #0278d3;
+      }
+
+      .mark {
+        background: #fff3ba;
+        padding: 5px 9px;
+        border-radius: 5px;
+      }
+
+      @media screen and (max-width: 550px) {
+        * {
+          text-align: center;
+        }
+        .container {
+          flex-direction: column;
+        }
+        ul {
+          margin-top: 1rem;
+          flex-direction: column;
+        }
+      }
+
+      .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 1);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 999;
+      }
+
+      .spinner {
+        border: 10px solid rgb(228, 228, 228);
+        border-top: 10px solid #0278d3; /* Kolor obramowania */
+        border-radius: 50%;
+        width: 90px;
+        height: 90px;
+        animation: spin 2s linear infinite; /* Animacja obrotu */
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="loading" v-if="isLoading">
+        <div class="spinner"></div>
+      </div>
+      <nav>
+        <div class="container">
+          <div class="logo">Kotika</div>
+          <ul>
+            <li v-for="(page, index) in pages">
+              <a
+                :href="page.link.url"
+                :key="index"
+                @click.prevent="setActivePage(index)"
+                :class="{active: activePage == index}"
+                >{{ page.link.name }}</a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div class="container">
+        <p class="page">
+          This is an example of
+          <span class="mark">{{ pages[activePage].content}}</span> Page
+        </p>
+      </div>
+      <footer>
+        <p>This is a development version.</p>
+        <p>
+          Do you have any suggestions? Write us:
+          <a href="mailto:developer@kotika.pl">developer@kotika.pl</a>
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            pages: [
+              {
+                link: { url: "index.html", name: "Home" },
+                content: "Home",
+              },
+              {
+                link: { url: "about.html", name: "About" },
+                content: "About",
+              },
+              {
+                link: { url: "services.html", name: "Services" },
+                content: "Services",
+              },
+              {
+                link: { url: "contact.html", name: "Contact" },
+                content: "Contact",
+              },
+              {
+                link: { url: "feedback.html", name: "Feedback" },
+                content: "Feedback",
+              },
+            ],
+            activePage: 0,
+            isLoading: false,
+            audio: {
+              Source: "audio/Part Of Your World - Disney Instrumental.mp3",
+              isActive: false,
+            },
+          }
+        },
+        methods: {
+          playAudio() {
+            const audio = new Audio(this.audio.Source)
+            if (this.audio.isActive == false) {
+              audio.play()
+              this.audio.isActive = true
+            }
+          },
+          setActivePage(index) {
+            this.playAudio()
+            this.isLoading = true
+            setTimeout(() => {
+              this.activePage = index
+              this.isLoading = false
+            }, 700)
+          },
+        },
+      })
+
+      app.mount("#app")
+    </script>
+  </body>
+</html>
